@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import { DigitalProduct } from '../types';
-import { Sparkles, DollarSign, BookOpen, Layers, ShieldCheck, ArrowRight, Loader2, Copy, Check, Download, Eye, Image as ImageIcon } from 'lucide-react';
+import { Sparkles, DollarSign, BookOpen, Layers, ShieldCheck, ArrowRight, Loader2, Copy, Check, Download, Eye, Image as ImageIcon, ShoppingBag } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 
 interface ProductCreatorProps {
   onSaveProduct: (product: DigitalProduct) => void;
   onOpenViewer: (product: DigitalProduct) => void;
+  onOpenCheckout?: (product: DigitalProduct) => void;
 }
 
-export const ProductCreator: React.FC<ProductCreatorProps> = ({ onSaveProduct, onOpenViewer }) => {
+export const ProductCreator: React.FC<ProductCreatorProps> = ({ onSaveProduct, onOpenViewer, onOpenCheckout }) => {
   const [niche, setNiche] = useState('High-Value Guide');
   const [topic, setTopic] = useState('Dark Psychology & Behavioral Influence Masterclass');
   const [price, setPrice] = useState('$67');
@@ -296,6 +297,26 @@ export const ProductCreator: React.FC<ProductCreatorProps> = ({ onSaveProduct, o
                     {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
                     <span>{copied ? 'Copied' : 'Copy'}</span>
                   </button>
+
+                  {onOpenCheckout && (
+                    <button
+                      onClick={() => onOpenCheckout({
+                        id: Date.now().toString(),
+                        title: generatedTitle || topic,
+                        niche,
+                        topic,
+                        price,
+                        productType,
+                        content: generatedResult,
+                        coverImage: coverImage || undefined,
+                        createdAt: new Date().toLocaleDateString(),
+                      })}
+                      className="flex items-center space-x-1.5 px-3.5 py-2 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 text-slate-950 text-xs font-bold rounded-xl shadow-md shadow-emerald-500/20 transition-all cursor-pointer"
+                    >
+                      <ShoppingBag className="w-4 h-4" />
+                      <span>Sell Live ({price})</span>
+                    </button>
+                  )}
 
                   <button
                     onClick={handleSave}
